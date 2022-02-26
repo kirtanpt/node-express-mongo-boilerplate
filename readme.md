@@ -7,11 +7,14 @@ Google cloud services like firebase push notification, cloud storage service etc
 functionality and templates email functionality.It also has Excel reading and writing functionality.
 
 ## Getting Started
+
 ```
 npm install
 ```
-First you need to install the dependencies. After installing the dependencies, you need to add secrets like mongoDB url in to the secret manager, then you need to run the following commands:
- 
+
+First you need to install the dependencies. After installing the dependencies, you need to add secrets like mongoDB url
+in to the secret manager, then you need to run the following commands:
+
 ```
 npm run dev
 ```
@@ -39,9 +42,10 @@ For production mode.
 - Role based authentication
 - Winston logging with Google Cloud Logging
 
-##Usage
+## Usage
 
 ### Role based Authentication
+
 ```
 const permit = require("../middleware/rbac.guard");
 router.get('/getMyProfile/', passport.authenticate('jwt', { session: false }), permit(['<Permission>']), myProfile);

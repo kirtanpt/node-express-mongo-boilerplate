@@ -3,10 +3,10 @@ const secret = require('../config/secret-manager');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const logger = require('../utilites/logger');
-const {Storage} = require('@google-cloud/storage');
+const { Storage } = require('@google-cloud/storage');
 let admin = require('firebase-admin');
 const mailerPlugin = require('./mailer/mailer');
-const {OAuth2Client} = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 const fs = require('fs');
 let XLSX = require('xlsx');
 
@@ -70,7 +70,7 @@ exports.validateToken = async (data) => {
     try {
         return await jwt.verify(data, secret('secretOrKey'));
     } catch (err) {
-        return {err: err.name};
+        return { err: err.name };
     }
 };
 
@@ -106,7 +106,7 @@ exports.validateSocialToken = async (data) => {
  * @description: SMTP Transport
  * @returns {*}
  */
-const initSMTPTransport = function() {
+const initSMTPTransport = function () {
     let setting;
 
     setting = {
@@ -128,11 +128,11 @@ const initSMTPTransport = function() {
  * @param {string} bccEmail
  * @returns {Promise<void>}
  */
-exports.sendEmail = async function(
-  subject,
-  content,
-  receiversEmail,
-  bccEmail = '',
+exports.sendEmail = async function (
+    subject,
+    content,
+    receiversEmail,
+    bccEmail = '',
 ) {
     const transporter = initSMTPTransport();
     const mailOptions = {
@@ -144,7 +144,7 @@ exports.sendEmail = async function(
     };
     logger.info('======Mail=Option======', mailOptions);
 
-    transporter.sendMail(mailOptions, function(error, info) {
+    transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             logger.error('err sending e-mail', error);
         }
@@ -153,11 +153,11 @@ exports.sendEmail = async function(
 };
 
 const templateEmail = async (
-  subject,
-  content,
-  receiversEmail,
-  bccEmail = '',
-  attachments,
+    subject,
+    content,
+    receiversEmail,
+    bccEmail = '',
+    attachments,
 ) => {
     const transporter = initSMTPTransport();
     const mailOptions = {
@@ -215,9 +215,9 @@ exports.getSignedUploadUrlv4 = async (tenantId, documentType, fileName) => {
     };
 
     const url = await storage
-      .bucket(secret('bucketName'))
-      .file(fileName)
-      .getSignedUrl(options);
+        .bucket(secret('bucketName'))
+        .file(fileName)
+        .getSignedUrl(options);
 
     return url;
 };
@@ -249,9 +249,9 @@ exports.getSignedUploadUrlv2 = async (tenantId, fileName, isPublic) => {
     let bucketPath = `${tenantId}/${fileName}`;
 
     const [url] = await storage
-      .bucket(bucket)
-      .file(bucketPath)
-      .getSignedUrl(options);
+        .bucket(bucket)
+        .file(bucketPath)
+        .getSignedUrl(options);
 
     return ({
         url: url,
@@ -271,14 +271,15 @@ exports.writeToBucket = async (filePath, bucketName) => {
         projectId: secret('gcpProjectId'),
     });
     const myBucket = await storage.bucket(bucketName)
-    const fileName=filePath.split('/').pop()
+    const fileName = filePath.split('/').pop()
     const file = myBucket.file(fileName);
     fs.createReadStream(filePath)
-      .pipe(file.createWriteStream())
-      .on('error', function(err) {})
-      .on('finish', function(data){
-        return 'https://storage.googleapis.com/<bucket name>/' + fileName;
-    })
+        .pipe(file.createWriteStream())
+        .on('error', function (err) {
+        })
+        .on('finish', function (data) {
+            return 'https://storage.googleapis.com/<bucket name>/' + fileName;
+        })
 };
 
 /**
@@ -287,7 +288,7 @@ exports.writeToBucket = async (filePath, bucketName) => {
  * @param isPublic
  * @returns {Promise<[string]>}
  */
-exports.deleteFile = async (documentUrl,isPublic) => {
+exports.deleteFile = async (documentUrl, isPublic) => {
     const storage = new Storage({
         keyFilename: '<file path>',
         projectId: secret('gcpProjectId'),
@@ -314,7 +315,7 @@ exports.deleteFile = async (documentUrl,isPublic) => {
  * @param isPublic
  * @returns {Promise<boolean>}
  */
-const fileExists = async (documentUrl,storage,isPublic) => {
+const fileExists = async (documentUrl, storage, isPublic) => {
 
     let url = documentUrl.split('/');
     let fileName = url[6];
@@ -385,7 +386,7 @@ const readExcel = async (filePath) => {
         if (z[0] === '!') continue;
         //parse out the column, row, and value
         let tt = 0;
-        for (let i = 0; i < z.length; i ++) {
+        for (let i = 0; i < z.length; i++) {
             if (!isNaN(z[i])) {
                 tt = i;
                 break;

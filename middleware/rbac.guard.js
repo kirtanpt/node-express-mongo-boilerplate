@@ -8,7 +8,7 @@ module.exports = function permit(permitted) {
         try {
             const token = request.header('Authorization');
             const decoded = jwt_decode(token);
-            const user = await User.findOne({ _id: decoded.userId,isDeleted:false,isActive:true }).populate('role');
+            const user = await User.findOne({ _id: decoded.userId, isDeleted: false, isActive: true }).populate('role');
 
             if (user && commonFunc.arrayComparator(user.role.permissions, permitted)) {
                 next();
